@@ -1,11 +1,23 @@
 syntax = "proto3";
 package example.api.v1;
 
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
 option java_multiple_files = true;
 option java_package = "io.github.bullettooth.example.api.grpc.v1";
 option go_package = "github.io/bullet-tooth/grpc-rest-api-example/gen/go/example/service/v1";
 
-import "google/api/annotations.proto";
+// Apply some swagger annotations to our REST API
+// See a rich example of possible configuration at
+// https://github.com/grpc-ecosystem/grpc-gateway/blob/main/examples/internal/proto/examplepb/a_bit_of_everything.proto
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "gRPC REST API Gateway example";
+    version: "0.0.1";
+  }
+};
 
 service ExampleService {
 
@@ -18,9 +30,13 @@ service ExampleService {
 }
 
 message HelloRequest {
-  string name = 1;
+  string name = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "The name to say hello to"
+  }];
 }
 
 message HelloResponse {
-  string message = 1;
+  string message = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "Hello response message"
+  }];
 }

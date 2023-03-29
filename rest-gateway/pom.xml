@@ -14,7 +14,7 @@
   <description>rest-gateway</description>
 
   <properties>
-    <proto.source.dir>${project.build.directory}/proto</proto.source.dir>
+    <proto.source.dir>buf</proto.source.dir>
   </properties>
 
   <dependencies>
@@ -26,13 +26,6 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>buf</directory>
-        <targetPath>${proto.source.dir}</targetPath>
-      </resource>
-    </resources>
-
     <plugins>
       <!-- GRPC/PROTO -->
       <plugin>
@@ -103,7 +96,7 @@
             </goals>
             <configuration>
               <executable>buf</executable>
-              <commandlineArgs>generate target/proto</commandlineArgs>
+              <commandlineArgs>generate buf</commandlineArgs>
               <environmentScript>go_env</environmentScript>
             </configuration>
           </execution>
