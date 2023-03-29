@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.github.bullet-tooth.example</groupId>
+    <artifactId>grpc-rest-api-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>rest-gateway</artifactId>
+
+  <name>rest-gateway</name>
+  <description>rest-gateway</description>
+
+  <properties>
+    <proto.source.dir>${project.build.directory}/proto</proto.source.dir>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.github.bullet-tooth.example</groupId>
+      <artifactId>api-protocol</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>buf</directory>
+        <targetPath>${proto.source.dir}</targetPath>
+      </resource>
+    </resources>
+
+    <plugins>
+      <!-- GRPC/PROTO -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-proto</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>io.github.bullet-tooth.example</includeGroupIds>
+              <outputDirectory>${proto.source.dir}</outputDirectory>
+              <includes>**/*.proto</includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase/>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>clean-go-mod</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>go</executable>
+              <commandlineArgs>clean -modcache</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-go-stubs</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>buf</executable>
+              <commandlineArgs>generate target/proto</commandlineArgs>
+              <environmentScript>go_env</environmentScript>
+            </configuration>
+          </execution>
+          <execution>
+            <id>build-go</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>go</executable>
+              <commandlineArgs>build -o target/rest-gateway</commandlineArgs>
+              <environmentScript>go_env</environmentScript>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
