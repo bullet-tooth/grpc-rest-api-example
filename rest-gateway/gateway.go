@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"net/http"
@@ -32,8 +33,7 @@ func run() error {
 		return err
 	}
 
-	// TODO add swagger UI to host on gateway
-
+	fmt.Println("Starting REST API Gateway at port " + *port + ", attached to target gRPC " + *grpcServerEndpoint)
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
 	return http.ListenAndServe(":"+*port, mux)
 }

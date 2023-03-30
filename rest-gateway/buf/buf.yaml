@@ -2,4 +2,3 @@ version: v1
 name: buf.build/bullet-tooth/grpc-rest-api-example
 deps:
   - buf.build/googleapis/googleapis
-  - buf.build/grpc-ecosystem/grpc-gateway

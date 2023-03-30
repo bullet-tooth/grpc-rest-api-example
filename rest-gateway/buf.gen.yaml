@@ -12,5 +12,4 @@ plugins:
     out: target/go
     opt:
       - paths=source_relative
-  - plugin: openapiv2
-    out: target/openapiv2
+      - grpc_api_configuration=buf/rest-gateway.yaml

@@ -1,0 +1,10 @@
+type: google.api.Service
+config_version: 3
+
+# See details at https://github.com/grpc-ecosystem/grpc-gateway#3-external-configuration
+
+http:
+  rules:
+    - selector: example.api.v1.ExampleService.hello
+      post: /api/v1/example/hello
+      body: "*"
